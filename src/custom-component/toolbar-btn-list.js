@@ -29,6 +29,7 @@ const clearCanvas = function () {
 };
 
 const compose = function () {
+  store.commit("compose/compose");
   store.commit("snapshot/recordSnapshot");
 };
 const buttonList = ref([
@@ -42,7 +43,7 @@ const buttonList = ref([
   },
   { name: "预览", method: preview },
   { name: "保存", method: save },
-  { name: "组合", method: clearCanvas, disabled: true },
+  { name: "组合", method: compose, disabled: true },
   { name: "拆分", method: clearCanvas },
   { name: "锁定", method: clearCanvas },
   { name: "解锁", method: clearCanvas },
