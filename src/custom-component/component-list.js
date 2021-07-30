@@ -1,9 +1,17 @@
+/*
+ * @Author: your name
+ * @Date: 2021-07-30 22:08:32
+ * @LastEditTime: 2021-07-30 22:09:56
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue3-drag-demo/src/custom-component/component-list.js
+ */
 // 公共样式
 export const commonStyle = {
   rotate: 0,
   opacity: 1,
 };
-
+const a = 1;
 // 公共属性
 export const commonAttr = {
   animations: [], // 动画
