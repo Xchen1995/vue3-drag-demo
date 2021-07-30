@@ -23,14 +23,19 @@
 </template>
 
 <script>
-import { reactive, ref } from "@vue/reactivity";
-import list from "@/custom-component/toolbar-btn-list.js";
+
+import {
+  buttonList,
+  isShowPreview,
+  preview,
+} from "@/custom-component/toolbar-btn-list.js";
 
 export default {
   setup() {
-    const buttonList = ref(list);
     return {
       buttonList,
+      isShowPreview,
+      preview
     };
   },
 };

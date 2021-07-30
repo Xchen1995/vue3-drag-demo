@@ -4,7 +4,7 @@
       v-for="(item, index) in componentList"
       :key="index"
       class="list"
-      draggable
+      draggable="true"
       :data-index="index"
     >
       <span class="iconfont" :class="'icon-' + item.icon"></span>
@@ -14,7 +14,6 @@
 </template>
 
 <script>
-
 import { reactive } from "vue";
 import componentList from "@/custom-component/component-list";
 
@@ -24,6 +23,7 @@ export default {
       componentList,
     });
     const handleDragStart = (e) => {
+      console.log(11);
       e.dataTransfer.setData("index", e.target.dataset.index);
     };
     return {

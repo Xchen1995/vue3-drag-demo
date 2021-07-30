@@ -2,14 +2,17 @@
   <div class="home">
     <Toolbar />
     <main>
-      <ComponentList />
+      <section class="left">
+        <ComponentList />
+      </section>
+      <section class="center"></section>
+      <section class="right"></section>
     </main>
   </div>
 </template>
 <script setup>
 import Toolbar from "@/components/Toolbar.vue";
 import ComponentList from "@/components/ComponentList.vue"; // 左侧列表组件
-
 </script>
 
 
