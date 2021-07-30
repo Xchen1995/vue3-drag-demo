@@ -1,11 +1,11 @@
 export default {
-
+  namespaced: true,
   state: () => ({
     menuTop: 0, // 右击菜单数据
     menuLeft: 0,
     menuShow: false,
   }),
-  
+
   mutations: {
     showContextMenu(state, { top, left }) {
       state.menuShow = true;
