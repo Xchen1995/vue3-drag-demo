@@ -1,3 +1,11 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-07-30 22:08:32
+ * @LastEditTime: 2021-07-30 22:32:33
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue3-drag-demo/src/views/Home.vue
+-->
 <template>
   <div class="home">
     <Toolbar />
@@ -5,7 +13,17 @@
       <section class="left">
         <ComponentList />
       </section>
-      <section class="center"></section>
+      <section class="center">
+        <div
+          class="content"
+          @drop="handleDrop"
+          @dragover="handleDragOver"
+          @mousedown="handleMouseDown"
+          @mouseup="deselectCurComponent"
+        >
+          <Editor />
+        </div>
+      </section>
       <section class="right"></section>
     </main>
   </div>
@@ -13,6 +31,12 @@
 <script setup>
 import Toolbar from "@/components/Toolbar.vue";
 import ComponentList from "@/components/ComponentList.vue"; // 左侧列表组件
+import Editor from "@/components/Editor/index.vue";
+
+const handleDrop = () => {};
+const handleDragOver = () => {};
+const handleMouseDown = () => {};
+const deselectCurComponent = () => {};
 </script>
 
 
