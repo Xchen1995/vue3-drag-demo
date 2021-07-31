@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-07-30 22:23:03
- * @LastEditTime: 2021-07-30 23:50:35
+ * @LastEditTime: 2021-07-31 08:49:26
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue3-drag-demo/src/components/Editor/Index.vue
@@ -21,10 +21,8 @@
 </template>
 <script>
 import Grid from "./Grid.vue";
-import { changeStyleWithScale } from "@/utils/translate.js";
-
 import { useStore } from "vuex";
-import { computed } from "vue";
+import style from './style.js';
 
 export default {
   components: {
@@ -32,13 +30,7 @@ export default {
   },
   setup() {
     const store = useStore();
-
-    let style = computed(() => {
-      return {
-        width: changeStyleWithScale(store.state.canvasStyleData.width) + "px",
-        height: changeStyleWithScale(store.state.canvasStyleData.height) + "px"
-      };
-    });
+    
     let handleContextMenu = (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -60,8 +52,7 @@ export default {
       store.commit("contextmenu/showContextMenu", { top, left });
     };
     return {
-      style,
-      changeStyleWithScale
+      style
     };
   }
 };
