@@ -1,5 +1,6 @@
 <template>
   <div @click="handleClick">
+    111
     <component
       class="component"
       :is="config.component"
@@ -24,18 +25,19 @@ export default {
     },
   },
   setup(props) {
-    const instance = getCurrentInstance();
+    const { ctx } = getCurrentInstance();
     onMounted(() => {
-      runAnimation(instance.$el, props.config.animations);
+      runAnimation(ctx.$el, props.config.animations);
     });
     const handleClick = () => {
       const events = props.config.events;
       Object.keys(events).forEach((event) => {
-        instance[event](events[event]);
+        ctx[event](events[event]);
       });
     };
     return {
       getStyle,
+      handleClick
     };
   },
   mixins: [mixins],

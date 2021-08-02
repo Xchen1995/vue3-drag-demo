@@ -17,21 +17,62 @@
   >
     <!-- 网格线 -->
     <Grid />
+    <!--页面组件列表展示-->
+    <Shape
+      v-for="(item, index) in componentData"
+      :defaultStyle="item.style"
+      :style="getShapeStyle(item.style)"
+      :key="item.id"
+      :active="item === curComponent"
+      :element="item"
+      :index="index"
+      :class="{ lock: item.isLock }"
+    >
+      <component
+        v-if="item.component != 'v-text'"
+        class="component"
+        :is="item.component"
+        :style="getComponentStyle(item.style)"
+        :propValue="item.propValue"
+        :element="item"
+        :id="'component' + item.id"
+      />
+
+      <component
+        v-else
+        class="component"
+        :is="item.component"
+        :style="getComponentStyle(item.style)"
+        :propValue="item.propValue"
+        @input="handleInput"
+        :element="item"
+        :id="'component' + item.id"
+      />
+    </Shape>
   </div>
 </template>
 <script>
 import Grid from "./Grid.vue";
 import { useStore } from "vuex";
-import style from './style.js';
+import style from "./style.js";
+import { computed, getCurrentInstance } from "@vue/runtime-core";
+import { getStyle, getComponentRotatedStyle } from "@/utils/style";
 
+import Shape from "./Shape.vue";
 export default {
   components: {
-    Grid
+    Grid,
+    Shape,
   },
   setup() {
     const store = useStore();
-    
-    let handleContextMenu = (e) => {
+
+    const componentData = computed(() => store.state.componentData);
+    const curComponent = computed(() => store.state.curComponent);
+    const canvasStyleData = computed(() => store.state.canvasStyleData);
+    const editor = computed(() => store.state.editor);
+
+    const handleContextMenu = (e) => {
       e.stopPropagation();
       e.preventDefault();
 
@@ -51,10 +92,32 @@ export default {
 
       store.commit("contextmenu/showContextMenu", { top, left });
     };
-    return {
-      style
+    const getShapeStyle = (style) => {
+      const result = {};
+      ["width", "height", "top", "left", "rotate"].forEach((attr) => {
+        if (attr != "rotate") {
+          result[attr] = style[attr] + "px";
+        } else {
+          result.transform = "rotate(" + style[attr] + "deg)";
+        }
+      });
+
+      return result;
     };
-  }
+    const getComponentStyle = (style) => {
+      return getStyle(style, ["top", "left", "width", "height", "rotate"]);
+    };
+    return {
+      style,
+      curComponent,
+      canvasStyleData,
+      editor,
+      handleContextMenu,
+      componentData,
+      getShapeStyle,
+      getComponentStyle,
+    };
+  },
 };
 </script>
 

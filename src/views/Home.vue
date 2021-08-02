@@ -30,13 +30,39 @@
 </template>
 <script setup>
 import Toolbar from "@/components/Toolbar.vue";
+import componentList from "@/custom-component/component-list"; // 左侧列表数据
+import generateID from "@/utils/generateID";
+
 import ComponentList from "@/components/ComponentList.vue"; // 左侧列表组件
 import Editor from "@/components/Editor/index.vue";
+import { useStore } from "vuex";
+import { deepCopy } from "@/utils/utils";
 
-const handleDrop = () => {};
-const handleDragOver = () => {};
-const handleMouseDown = () => {};
-const deselectCurComponent = () => {};
+const store = useStore();
+
+const handleDrop = (e) => {
+  e.preventDefault();
+  e.stopPropagation();
+  const index = e.dataTransfer.getData("index");
+  if (index) {
+    const component = deepCopy(componentList[index]);
+    component.style.top = e.offsetY;
+    component.style.left = e.offsetX;
+    component.id = generateID();
+    store.commit("addComponent", { component });
+    store.commit("snapshot/recordSnapshot");
+  }
+};
+const handleDragOver = (e) => {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "copy";
+};
+const handleMouseDown = () => {
+  store.commit("setClickComponentStatus", false);
+};
+const deselectCurComponent = () => {
+  console.log(44);
+};
 </script>
 
 

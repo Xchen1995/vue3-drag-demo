@@ -1,6 +1,5 @@
 <template>
   <div class="toolbar">
-    {{isShowPreview}}
     <el-button
       v-for="item in buttonList"
       :key="item.id"

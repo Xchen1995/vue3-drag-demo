@@ -23,7 +23,6 @@ export default {
       componentList,
     });
     const handleDragStart = (e) => {
-      console.log(11);
       e.dataTransfer.setData("index", e.target.dataset.index);
     };
     return {
