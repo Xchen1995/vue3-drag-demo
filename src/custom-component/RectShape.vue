@@ -1,6 +1,14 @@
+<!--
+ * @Author: your name
+ * @Date: 2021-08-02 22:20:09
+ * @LastEditTime: 2021-08-02 22:55:36
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: /vue3-drag-demo/src/custom-component/ReatShape.vue
+-->
 <template>
   <div class="rect-shape">
-    <v-text :propValue="element.propValue" :element="element" />
+    <!-- <v-text :propValue="element.propValue" :element="element" /> -->
   </div>
 </template>
 
