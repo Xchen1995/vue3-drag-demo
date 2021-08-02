@@ -2,17 +2,21 @@ import store from "../store";
 import { ElMessage } from "element-plus";
 import { ref } from "vue";
 
-const undo = function () {
+const handlePreviewChange = () => {
+  store.commit("setEditMode", "edit");
+};
+
+const undo = () => {
   store.commit("snapshot/undo");
 };
 
-const redo = function () {
+const redo = () => {
   store.commit("snapshot/redo");
 };
 
 const isShowPreview = ref(false);
 
-const preview = function () {
+const preview = () => {
   isShowPreview.value = true;
   store.commit("setEditMode", "preview");
 };
@@ -32,6 +36,11 @@ const compose = function () {
   store.commit("compose/compose");
   store.commit("snapshot/recordSnapshot");
 };
+
+const decompose = function () {
+  store.commit("compose/decompose");
+  store.commit("snapshot/recordSnapshot");
+};
 const buttonList = ref([
   {
     name: "撤销",
@@ -44,9 +53,9 @@ const buttonList = ref([
   { name: "预览", method: preview },
   { name: "保存", method: save },
   { name: "组合", method: compose, disabled: true },
-  { name: "拆分", method: clearCanvas },
+  { name: "拆分", method: decompose },
   { name: "锁定", method: clearCanvas },
   { name: "解锁", method: clearCanvas },
 ]);
 
-export { buttonList, isShowPreview, preview };
+export { buttonList, isShowPreview, preview, handlePreviewChange };

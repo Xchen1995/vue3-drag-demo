@@ -1,5 +1,6 @@
 <template>
   <div class="toolbar">
+    {{isShowPreview}}
     <el-button
       v-for="item in buttonList"
       :key="item.id"
@@ -19,6 +20,8 @@
       <span>画布比例</span>
       <!-- <input v-model="scale" @input="handleScaleChange" /> % -->
     </div>
+    <Preview v-model:show="isShowPreview" @change="handlePreviewChange" />
+
   </div>
 </template>
 
@@ -28,14 +31,20 @@ import {
   buttonList,
   isShowPreview,
   preview,
+  handlePreviewChange,
 } from "@/custom-component/toolbar-btn-list.js";
+import Preview from '@/components/Editor/Preview.vue';
 
 export default {
+  components:{
+    Preview
+  },
   setup() {
     return {
       buttonList,
       isShowPreview,
-      preview
+      preview,
+      handlePreviewChange
     };
   },
 };

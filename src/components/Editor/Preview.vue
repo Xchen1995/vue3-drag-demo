@@ -1,59 +1,53 @@
-<!--
- * @Author: your name
- * @Date: 2021-07-31 08:12:59
- * @LastEditTime: 2021-07-31 08:49:41
- * @LastEditors: Please set LastEditors
- * @Description: In User Settings Edit
- * @FilePath: /vue3-drag-demo/src/components/Editor/Preview.vue
--->
-
 <template>
   <div class="bg" v-if="show">
     <el-button @click="close" class="close">关闭</el-button>
     <div class="canvas-container">
-      <div
-        class="canvas"
-        :style="{
-                    width: changeStyleWithScale(canvasStyleData.width) + 'px',
-                    height: changeStyleWithScale(canvasStyleData.height) + 'px',
-                }"
-      >
-        <ComponentWrapper v-for="(item, index) in componentData" :key="index" :config="item" />
+      <div class="canvas" :style="style">
+        <ComponentWrapper
+          v-for="(item, index) in componentData"
+          :key="index"
+          :config="item"
+        />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import style from './style.js';
+import style from "./style.js";
 
 import { getStyle } from "@/utils/style";
-import { mapState } from "vuex";
-import ComponentWrapper from "./ComponentWrapper";
+import { useStore } from "vuex";
+import ComponentWrapper from "./ComponentWrapper.vue";
 import { changeStyleWithScale } from "@/utils/translate";
-
+import { computed } from "@vue/runtime-core";
 export default {
-  model: {
-    prop: "show",
-    event: "change"
-  },
   props: {
     show: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   components: { ComponentWrapper },
-  computed: mapState(["componentData", "canvasStyleData"]),
-  methods: {
-    changeStyleWithScale,
+  setup(props, { emit }) {
 
-    getStyle,
+    const store = useStore();
+    const componentData = computed(() => store.state.componentData);
+    const canvasStyleData = computed(() => store.state.canvasStyleData);
 
-    close() {
-      this.$emit("change", false);
-    }
-  }
+    const close = () => {
+      emit("update:show", false);
+    };
+    
+    return {
+      style,
+      changeStyleWithScale,
+      componentData,
+      canvasStyleData,
+      getStyle,
+      close
+    };
+  },
 };
 </script>
 
