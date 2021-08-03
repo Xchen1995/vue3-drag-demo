@@ -62,6 +62,7 @@ const list = [
     component: "Picture",
     label: "图片",
     icon: "tupian",
+    propValue: import('@/assets/title.jpg'),
     style: {
       width: 300,
       height: 200,
@@ -90,7 +91,6 @@ const list = [
     },
   },
 ];
-
 function addStyleAndAttr(list) {
   for (let i = 0, len = list.length; i < len; i++) {
     const item = list[i];
