@@ -55,7 +55,7 @@
 import Grid from "./Grid.vue";
 import { useStore } from "vuex";
 import style from "./style.js";
-import { computed, getCurrentInstance } from "@vue/runtime-core";
+import { computed, getCurrentInstance, reactive } from "@vue/runtime-core";
 import { getStyle, getComponentRotatedStyle } from "@/utils/style";
 
 import Shape from "./Shape.vue";
@@ -65,6 +65,18 @@ export default {
     Shape,
   },
   setup() {
+    const state = reactive({
+      editorX: 0,
+      editorY: 0,
+      start: {
+        // 选中区域的起点
+        x: 0,
+        y: 0,
+      },
+      width: 0,
+      height: 0,
+      isShowArea: false,
+    });
     const store = useStore();
 
     const componentData = computed(() => store.state.componentData);
@@ -92,6 +104,116 @@ export default {
 
       store.commit("contextmenu/showContextMenu", { top, left });
     };
+    const handleMouseDown = () => {
+      if (
+        !curComponent.value ||
+        (curComponent.value.component != "v-text" &&
+          curComponent.value.component != "rect-shape")
+      ) {
+        e.preventDefault();
+      }
+
+      hideArea();
+
+      // 获取编辑器的位移信息，每次点击时都需要获取一次。主要是为了方便开发时调试用。
+      const rectInfo = editor.value.getBoundingClientRect();
+      state.editorX = rectInfo.x;
+      state.editorY = rectInfo.y;
+
+      const startX = e.clientX;
+      const startY = e.clientY;
+      state.start.x = startX - state.editorX;
+      state.start.y = startY - state.editorY;
+      // 展示选中区域
+      state.isShowArea = true;
+
+      const move = (moveEvent) => {
+        state.width = Math.abs(moveEvent.clientX - startX);
+        state.height = Math.abs(moveEvent.clientY - startY);
+        if (moveEvent.clientX < startX) {
+          state.start.x = moveEvent.clientX - state.editorX;
+        }
+
+        if (moveEvent.clientY < startY) {
+          state.start.y = moveEvent.clientY - state.editorY;
+        }
+      };
+
+      const up = (e) => {
+        document.removeEventListener("mousemove", move);
+        document.removeEventListener("mouseup", up);
+
+        if (e.clientX == startX && e.clientY == startY) {
+          hideArea();
+          return;
+        }
+
+        createGroup();
+      };
+
+      document.addEventListener("mousemove", move);
+      document.addEventListener("mouseup", up);
+    };
+    const createGroup = () => {
+      // 获取选中区域的组件数据
+      const areaData = getSelectArea();
+      if (areaData.length <= 1) {
+        hideArea();
+        return;
+      }
+
+      // 根据选中区域和区域中每个组件的位移信息来创建 Group 组件
+      // 要遍历选择区域的每个组件，获取它们的 left top right bottom 信息来进行比较
+      let top = Infinity,
+        left = Infinity;
+      let right = -Infinity,
+        bottom = -Infinity;
+      areaData.forEach((component) => {
+        let style = {};
+        if (component.component == "Group") {
+          component.propValue.forEach((item) => {
+            const rectInfo = $(`#component${item.id}`).getBoundingClientRect();
+            style.left = rectInfo.left - this.editorX;
+            style.top = rectInfo.top - this.editorY;
+            style.right = rectInfo.right - this.editorX;
+            style.bottom = rectInfo.bottom - this.editorY;
+
+            if (style.left < left) left = style.left;
+            if (style.top < top) top = style.top;
+            if (style.right > right) right = style.right;
+            if (style.bottom > bottom) bottom = style.bottom;
+          });
+        } else {
+          style = getComponentRotatedStyle(component.style);
+        }
+
+        if (style.left < left) left = style.left;
+        if (style.top < top) top = style.top;
+        if (style.right > right) right = style.right;
+        if (style.bottom > bottom) bottom = style.bottom;
+      });
+
+      state.start.x = left;
+      state.start.y = top;
+      state.width = right - left;
+      state.height = bottom - top;
+
+      // 设置选中区域位移大小信息和区域内的组件数据
+      store.commit("setAreaData", {
+        style: {
+          left,
+          top,
+          width: state.width,
+          height: state.height,
+        },
+        components: areaData,
+      });
+    };
+    const hideArea = () => {
+      state.isShowArea = 0;
+      state.width = 0;
+      state.height = 0;
+    };
     const getShapeStyle = (style) => {
       const result = {};
       ["width", "height", "top", "left", "rotate"].forEach((attr) => {
@@ -101,7 +223,7 @@ export default {
           result.transform = "rotate(" + style[attr] + "deg)";
         }
       });
-
+      console.log(result);
       return result;
     };
     const getComponentStyle = (style) => {

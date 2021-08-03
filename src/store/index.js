@@ -35,6 +35,7 @@ export default createStore({
       state.isClickComponent = status;
     },
     setCurComponent(state, { component, index }) {
+      console.log(component)
       state.curComponent = component;
       state.curComponentIndex = index;
     },

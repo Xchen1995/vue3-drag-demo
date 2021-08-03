@@ -1,6 +1,5 @@
 <template>
   <div @click="handleClick">
-    111
     <component
       class="component"
       :is="config.component"

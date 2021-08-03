@@ -25,7 +25,7 @@
 <script>
 import eventBus from "@/utils/eventBus";
 import runAnimation from "@/utils/runAnimation";
-import { mapState, useStore } from "vuex";
+import { useStore } from "vuex";
 import calculateComponentPositonAndSize from "@/utils/calculateComponentPositonAndSize";
 import { mod360 } from "@/utils/translate";
 import { reactive, toRefs } from "@vue/reactivity";
@@ -128,7 +128,7 @@ export default {
       };
 
       const up = () => {
-        hasMove && store.commit("recordSnapshot");
+        hasMove && store.commit("snapshot/recordSnapshot");
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", up);
         state.cursors = getCursor(); // 根据旋转角度获取光标位置
@@ -177,7 +177,7 @@ export default {
 
     const getCursor = () => {
       const { angleToCursor, initialAngle, pointList } = state;
-      const rotate = mod360(curComponent.style.rotate); // 取余 360
+      const rotate = mod360(curComponent.value.style.rotate); // 取余 360
       const result = {};
       let lastMatchIndex = -1; // 从上一个命中的角度的索引开始匹配下一个，降低时间复杂度
 
@@ -250,7 +250,7 @@ export default {
       };
 
       const up = () => {
-        hasMove && store.commit("recordSnapshot");
+        hasMove && store.commit("snapshot/recordSnapshot");
         // 触发元素停止移动事件，用于隐藏标线
         eventBus.$emit("unmove");
         document.removeEventListener("mousemove", move);
@@ -265,7 +265,7 @@ export default {
       // 阻止向父组件冒泡
       e.stopPropagation();
       e.preventDefault();
-      store.commit("hideContextMenu");
+      store.commit("contextmenu/hideContextMenu");
     };
 
     const handleMouseDownOnPoint = (point, e) => {
@@ -344,7 +344,7 @@ export default {
       const up = () => {
         document.removeEventListener("mousemove", move);
         document.removeEventListener("mouseup", up);
-        needSave && store.commit("recordSnapshot");
+        needSave && store.commit("snapshot/recordSnapshot");
       };
 
       document.addEventListener("mousemove", move);
@@ -362,7 +362,21 @@ export default {
 
       return false;
     };
+    onMounted(() => {
+      // 用于 Group 组件
+      
+      if (curComponent.value) {
+        state.cursors = getCursor(); // 根据旋转角度获取光标位置
+      }
+
+      eventBus.$on("runAnimation", () => {
+        if (props.element == curComponent.value) {
+          runAnimation(ctx.$el, curComponent.value.animations);
+        }
+      });
+    });
     return {
+      curComponent,
       handleRotate,
       handleMouseDownOnShape,
       selectCurComponent,
@@ -371,18 +385,6 @@ export default {
       getPointStyle,
       handleMouseDownOnPoint,
     };
-    onMounted(() => {
-      // 用于 Group 组件
-      if (curComponent) {
-        startTop.cursors = getCursor(); // 根据旋转角度获取光标位置
-      }
-
-      eventBus.$on("runAnimation", () => {
-        if (props.element == curComponent) {
-          runAnimation(ctx.$el, curComponent.animations);
-        }
-      });
-    });
   },
 };
 </script>
