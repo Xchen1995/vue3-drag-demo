@@ -7,6 +7,8 @@
  * @FilePath: /vue3-drag-demo/src/custom-component/component-list.js
  */
 // 公共样式
+import img from '../assets/logo.png'
+
 export const commonStyle = {
   rotate: 0,
   opacity: 1,
@@ -62,10 +64,10 @@ const list = [
     component: "Picture",
     label: "图片",
     icon: "tupian",
-    propValue: import('@/assets/title.jpg'),
+    propValue: img,
     style: {
       width: 300,
-      height: 200,
+      height: 300,
       borderRadius: "",
     },
   },
