@@ -10,10 +10,15 @@
 import { createStore } from "vuex";
 import contextmenu from "./modules/contextmenu.js";
 import snapshot from "./modules/snapshot.js";
+import compose from './modules/compose.js';
+import copy from './modules/copy.js';
+
 export default createStore({
   modules: {
     contextmenu,
     snapshot,
+    compose,
+    copy
   },
   state: () => ({
     componentData: [],
@@ -31,11 +36,17 @@ export default createStore({
     editMode: "edit", // 编辑器模式 edit preview
   }),
   mutations: {
+    lock({ curComponent }) {
+      curComponent.isLock = true;
+    },
+    unlock({ curComponent }) {
+      curComponent.isLock = false;
+    },
     setClickComponentStatus(state, status) {
       state.isClickComponent = status;
     },
     setCurComponent(state, { component, index }) {
-      console.log(component)
+      console.log(component);
       state.curComponent = component;
       state.curComponentIndex = index;
     },

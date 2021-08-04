@@ -49,6 +49,8 @@
         :id="'component' + item.id"
       />
     </Shape>
+    <!-- 右击菜单 -->
+    <ContextMenu />
   </div>
 </template>
 <script>
@@ -57,12 +59,14 @@ import { useStore } from "vuex";
 import style from "./style.js";
 import { computed, getCurrentInstance, reactive } from "@vue/runtime-core";
 import { getStyle, getComponentRotatedStyle } from "@/utils/style";
+import ContextMenu from "./ContextMenu.vue";
 
 import Shape from "./Shape.vue";
 export default {
   components: {
     Grid,
     Shape,
+    ContextMenu,
   },
   setup() {
     const state = reactive({
@@ -154,6 +158,7 @@ export default {
       document.addEventListener("mousemove", move);
       document.addEventListener("mouseup", up);
     };
+
     const createGroup = () => {
       // 获取选中区域的组件数据
       const areaData = getSelectArea();
@@ -209,6 +214,7 @@ export default {
         components: areaData,
       });
     };
+
     const hideArea = () => {
       state.isShowArea = 0;
       state.width = 0;
