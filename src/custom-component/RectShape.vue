@@ -1,7 +1,7 @@
 <!--
  * @Author: your name
  * @Date: 2021-08-02 22:20:09
- * @LastEditTime: 2021-08-02 22:55:36
+ * @LastEditTime: 2021-08-22 21:56:02
  * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: /vue3-drag-demo/src/custom-component/ReatShape.vue
@@ -31,5 +31,8 @@ export default {
   width: 100%;
   height: 100%;
   overflow: auto;
+}
+.color {
+  
 }
 </style>
